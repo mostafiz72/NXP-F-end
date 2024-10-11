@@ -19,7 +19,7 @@ export default function Login() {
         if(fetchReq.data.status === true ){
             setTimeout(() => {
                 location.href = "/home";
-            }, 2000);
+            }, 1000);
         }
     };
 
