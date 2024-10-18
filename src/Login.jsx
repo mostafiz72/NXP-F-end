@@ -1,5 +1,5 @@
 import axios from 'axios';  /// API data calling fetch/axios useing
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { API_URL } from './constants/constants';
 import AlertError from './Alert/AlertError';
@@ -16,12 +16,34 @@ export default function Login() {
     const handleForm = async () =>{
         const fetchReq = await axios.post(API_URL + "/login", {email, pass});
         setFromResponse(fetchReq.data);
+        
+        if(fetchReq.data.status === true){
+            localStorage.setItem("token", fetchReq.data.token);
+        }
         if(fetchReq.data.status === true ){
             setTimeout(() => {
                 location.href = "/home";
             }, 1000);
         }
     };
+
+    useEffect(()=>{
+
+        const token = localStorage.getItem("token");
+    
+        axios.post(API_URL + "/authorize", { token })
+        .then((response)=>{
+            if(response.data.status === true){
+                location.href = "/post";
+            }
+            
+        }).catch((error)=>{
+            location.href = "/login";
+            console.log(error);
+            
+        });
+             
+         }, [])
 
 
   return (
